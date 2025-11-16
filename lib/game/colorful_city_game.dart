@@ -49,7 +49,12 @@ class ColorfulCityGame extends FlameGame with HasCollisionDetection, DragCallbac
   Vector2? _swipeStart;
   static const double _swipeThreshold = 50.0;
 
-  ColorfulCityGame();
+  ColorfulCityGame() : super(
+    camera: CameraComponent.withFixedResolution(
+      width: GameConfig.worldSize.x,
+      height: GameConfig.worldSize.y,
+    ),
+  );
 
   @override
   Color backgroundColor() => GameConstants.backgroundColor;
@@ -57,12 +62,6 @@ class ColorfulCityGame extends FlameGame with HasCollisionDetection, DragCallbac
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    
-    // Set camera to fixed size using modern CameraComponent API
-    camera = CameraComponent.withFixedResolution(
-      width: GameConfig.worldSize.x,
-      height: GameConfig.worldSize.y,
-    );
     
     // Initialize game components
     _road = Road();
