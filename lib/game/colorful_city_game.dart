@@ -15,7 +15,7 @@ import 'managers/spawn_manager.dart';
 import 'managers/score_manager.dart';
 
 /// Main Flame game class for Street Sprint
-class ColorfulCityGame extends FlameGame with HasCollisionDetection, PanDetector {
+class ColorfulCityGame extends FlameGame with HasCollisionDetection, DragCallbacks {
   // Callbacks
   Function(int score, int coins)? onScoreUpdate;
   Function()? onGameOver;
@@ -58,8 +58,11 @@ class ColorfulCityGame extends FlameGame with HasCollisionDetection, PanDetector
   Future<void> onLoad() async {
     await super.onLoad();
     
-    // Set camera to fixed size using CameraComponent with FixedResolutionViewport
-    camera.viewport = FixedResolutionViewport(resolution: GameConfig.worldSize);
+    // Set camera to fixed size using modern CameraComponent API
+    camera = CameraComponent.withFixedResolution(
+      width: GameConfig.worldSize.x,
+      height: GameConfig.worldSize.y,
+    );
     
     // Initialize game components
     _road = Road();
@@ -197,12 +200,12 @@ class ColorfulCityGame extends FlameGame with HasCollisionDetection, PanDetector
   }
 
   @override
-  void onPanStart(DragStartEvent info) {
+  void onDragStart(DragStartEvent info) {
     _swipeStart = info.canvasPosition;
   }
 
   @override
-  void onPanUpdate(DragUpdateEvent info) {
+  void onDragUpdate(DragUpdateEvent info) {
     if (_swipeStart == null || _isPaused || _isGameOver) return;
     
     final delta = info.canvasPosition - _swipeStart!;
@@ -229,7 +232,7 @@ class ColorfulCityGame extends FlameGame with HasCollisionDetection, PanDetector
   }
 
   @override
-  void onPanEnd(DragEndEvent info) {
+  void onDragEnd(DragEndEvent info) {
     _swipeStart = null;
   }
 
