@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,7 @@ class Player extends PositionComponent with HasGameRef<ColorfulCityGame>, Collis
       } else {
         // Arc motion using sine wave
         final progress = _jumpTimer / GameConfig.jumpDuration;
-        final jumpHeight = sin(progress * 3.14159) * GameConfig.jumpHeight;
+        final jumpHeight = sin(progress * pi) * GameConfig.jumpHeight;
         position.y = _initialJumpY - jumpHeight;
       }
     }
