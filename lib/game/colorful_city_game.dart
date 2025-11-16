@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flame/game.dart';
-import 'package:flame/input.dart';
+import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 import 'config/game_config.dart';
@@ -56,8 +58,8 @@ class ColorfulCityGame extends FlameGame with HasCollisionDetection, PanDetector
   Future<void> onLoad() async {
     await super.onLoad();
     
-    // Set camera to fixed size
-    camera.viewport = FixedResolutionViewport(GameConfig.worldSize);
+    // Set camera to fixed size using CameraComponent with FixedResolutionViewport
+    camera.viewport = FixedResolutionViewport(resolution: GameConfig.worldSize);
     
     // Initialize game components
     _road = Road();
@@ -195,15 +197,15 @@ class ColorfulCityGame extends FlameGame with HasCollisionDetection, PanDetector
   }
 
   @override
-  void onPanStart(DragStartInfo info) {
-    _swipeStart = info.eventPosition.global;
+  void onPanStart(DragStartEvent info) {
+    _swipeStart = info.canvasPosition;
   }
 
   @override
-  void onPanUpdate(DragUpdateInfo info) {
+  void onPanUpdate(DragUpdateEvent info) {
     if (_swipeStart == null || _isPaused || _isGameOver) return;
     
-    final delta = info.eventPosition.global - _swipeStart!;
+    final delta = info.canvasPosition - _swipeStart!;
     
     // Horizontal swipe
     if (delta.x.abs() > _swipeThreshold && delta.x.abs() > delta.y.abs()) {
@@ -227,7 +229,7 @@ class ColorfulCityGame extends FlameGame with HasCollisionDetection, PanDetector
   }
 
   @override
-  void onPanEnd(DragEndInfo info) {
+  void onPanEnd(DragEndEvent info) {
     _swipeStart = null;
   }
 
